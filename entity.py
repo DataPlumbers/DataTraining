@@ -6,20 +6,20 @@ from dateparser.search import search_dates
 
 nlp = sp.load("en_core_web_lg")
 
+
 def get_entities_file(filepath):
     # Get CSV file as a Data Frame (df)
-    df = pd.read_csv(filepath)
+    df = pd.read_csv(filepath, delimiter=',', encoding='utf-8-sig')
+    #print(df)
     # Iterate over each column in Data Frame
     ent_dict = {}
     for column in df:
-        #print(column)
         ent = get_entities_col(df[column])
         ent_dict[column] = ent
     return ent_dict
 
 
 def get_entities_col(column):
-    entity_map = {}
     # Loop over each value in the column
     col_ents = []
     for value in column:
@@ -36,6 +36,10 @@ def get_entities_col(column):
         if search_dates(valstr) != None:
             col_ents.append("DATE")
     df = pd.DataFrame(col_ents)
-    return df.mode()[0][0]
-
-
+    # Hacky fix for cases when there isn't an entity associated with a header
+    # We can do something more elegant here...
+    try:
+        res = df.mode()[0][0]
+        return res
+    except KeyError:
+        pass

@@ -10,6 +10,7 @@ def classify(ontology, filepaths):
     # Verify parameters
     if len(filepaths) == 0 or len(ontology) != 2:
         print_usage()
+        raise ValueError("Bad arguments for Driver.classify")
     my_classifier = cfr.Classifier(filepaths)
     results_json = my_classifier.classify_ontology(ontology)
     return results_json
