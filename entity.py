@@ -1,10 +1,10 @@
 # Reference: https://spacy.io/usage/linguistic-features
 
-import spacy as sp
+import spacys_mom as spm
 import pandas as pd
 from dateparser.search import search_dates
 
-nlp = sp.load("en_core_web_lg")
+nlp = spm.SpacyWrapper()
 
 
 def get_entities_file(filepath):
@@ -26,7 +26,7 @@ def get_entities_col(column):
         valstr = str(value)
         # Evaluate each value in spaCy
         # NOTE: a "value" can be anything (number, sentence, etc.)
-        doc = nlp(valstr)
+        doc = nlp.process(valstr)
         val_ents = [e.label_ for e in doc.ents]
         if len(val_ents) != 0:
             # Get most common entity type

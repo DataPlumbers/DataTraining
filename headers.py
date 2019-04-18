@@ -1,11 +1,11 @@
 import csv
-import spacy as sp
+import spacys_mom as spm
 import wordninja as wj
 import numpy as np
 
 ### SPACY STUFF
 
-nlp = sp.load('en_core_web_lg')
+nlp = spm.SpacyWrapper()
 
 def find_similar(input, filepath):
     category = input[0]
@@ -51,11 +51,11 @@ def cmp_prop_to_headers(orig_prop, orig_headers, prop_sl, headers_sl):
 def cmp_prop_to_header(prop_sl, header_sl):
     means_all = []
     for word in prop_sl:
-        word_spacy = nlp(word)
+        word_spacy = nlp.process(word)
         cmp_values = []
         for header in header_sl:
-            header_spacy = nlp(header)
-            sim_value = cmp_spacy(word_spacy, header_spacy)
+            header_spacy = nlp.process(header)
+            sim_value = nlp.compare(word_spacy, header_spacy)
             # If a lemmatized word from both header and property
             # are very closely related, return it regardless
             # of overall average. 
@@ -72,16 +72,13 @@ def cmp_prop_to_header(prop_sl, header_sl):
     else:
         return False
 
-def cmp_spacy(word, header):
-    return word.similarity(header)
-
 ### Util Functions
 
 def split_and_lemmatize(input):
     split_words = slice_word(input)
     input_lemma = []
     for word in split_words:
-        word_tok = nlp(word)
+        word_tok = nlp.process(word)
         word_lemma = lemmatize_word(word_tok)
         input_lemma.append(word_lemma)
     return input_lemma
