@@ -33,8 +33,11 @@ def get_entities_col(column):
             most_common_ent = max(set(val_ents), key=val_ents.count)
             col_ents.append(most_common_ent)
         # TODO: Override Cardinal pretty often...
-        if search_dates(valstr) != None:
-            col_ents.append("DATE")
+        try:
+            float(valstr)
+        except ValueError:
+            if search_dates(valstr) != None:
+                col_ents.append("DATE")
     df = pd.DataFrame(col_ents)
     # Hacky fix for cases when there isn't an entity associated with a header
     # We can do something more elegant here...
