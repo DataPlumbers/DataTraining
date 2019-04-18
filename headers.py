@@ -55,7 +55,7 @@ def cmp_prop_to_header(prop_sl, header_sl):
         cmp_values = []
         for header in header_sl:
             header_spacy = nlp.process(header)
-            sim_value = cmp_spacy(word_spacy, header_spacy)
+            sim_value = nlp.compare(word_spacy, header_spacy)
             # If a lemmatized word from both header and property
             # are very closely related, return it regardless
             # of overall average. 
@@ -71,9 +71,6 @@ def cmp_prop_to_header(prop_sl, header_sl):
         return True
     else:
         return False
-
-def cmp_spacy(word, header):
-    return word.similarity(header)
 
 ### Util Functions
 

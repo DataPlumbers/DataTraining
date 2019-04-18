@@ -6,3 +6,6 @@ class SpacyWrapper:
 
    def process(self, word):
       return self.nlp(word)
+
+   def compare(self, word, header):
+      return word.similarity(header)
