@@ -7,9 +7,7 @@ import numpy as np
 
 nlp = spm.SpacyWrapper()
 
-def find_similar(input, filepath):
-    category = input[0]
-    properties = input[1]
+def find_similar(properties, filepath):
     # Load spaCy's NLP dictionaries
     # Slice and Lemmatize properties
     properties_sl = []
@@ -28,9 +26,7 @@ def find_similar(input, filepath):
     for index in range(len(properties)):
         classification[properties[index]] = cmp_prop_to_headers(properties[index], headers, properties_sl[index], headers_sl)
     # Populate dict and return
-    results = {}
-    results["category"] = category
-    results["classification"] = classification
+    results = (filepath, classification)
     return results
 
 ### Comparison Functions

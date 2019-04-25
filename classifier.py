@@ -11,9 +11,20 @@ class Classifier:
     def classify_ontology(self, ontology):
         # Once I deconstruct the JSON object (the ontology) I get passed, 
         # I will use that for comparison. For now just compare based on
-        # similarity between headers. 
-        results = []
+        # similarity between headers.
+        headers_results = []
+        category = ontology[0]
+        properties = ontology[1]
         for filepath in self.data_filepaths:
-            results.append(hdr.find_similar(ontology, filepath))
-        results_json = json.dumps(results)
-        return results_json
+            headers_results.append(hdr.find_similar(properties, filepath))
+        # Translate to agreed contract w/ backend
+        results = {}
+        for prop in properties:
+            results[prop] = {}
+            for f, dict_res in headers_results:
+                if f not in results[prop].keys():
+                    results[prop][f] = dict_res[prop]
+                else:
+                    results[prop][f].append(dict_res[prop])
+        finalized = {category: results}
+        return json.dumps(finalized)
