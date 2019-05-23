@@ -1,16 +1,13 @@
 # Reference: https://spacy.io/usage/linguistic-features
-
-import spacys_mom as spm
 import pandas as pd
+import entity_columns as ec
 from dateparser.search import search_dates
-
-nlp = spm.SpacyWrapper()
 
 
 def get_entities_file(filepath):
     # Get CSV file as a Data Frame (df)
     df = pd.read_csv(filepath, delimiter=',', encoding='utf-8-sig')
-    #print(df)
+    # print(df)
     # Iterate over each column in Data Frame
     ent_dict = {}
     for column in df:
@@ -20,25 +17,12 @@ def get_entities_file(filepath):
 
 
 def get_entities_col(column):
-    # Loop over each value in the column
-    col_ents = []
-    for value in column:
-        valstr = str(value)
-        # Evaluate each value in spaCy
-        # NOTE: a "value" can be anything (number, sentence, etc.)
-        doc = nlp.process(valstr)
-        val_ents = [e.label_ for e in doc.ents]
-        if len(val_ents) != 0:
-            # Get most common entity type
-            most_common_ent = max(set(val_ents), key=val_ents.count)
-            col_ents.append(most_common_ent)
-        # TODO: Override Cardinal pretty often...
-        try:
-            float(valstr)
-        except ValueError:
-            if search_dates(valstr) != None:
-                col_ents.append("DATE")
+    identifier = ec.ColumnEntityIdentifier(column)
+    col_ents = identifier.execute()
+
+    # Wrap results in panda DataFrame so that we can operate on it
     df = pd.DataFrame(col_ents)
+
     # Hacky fix for cases when there isn't an entity associated with a header
     # We can do something more elegant here...
     try:
