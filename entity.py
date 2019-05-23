@@ -7,7 +7,7 @@ from dateparser.search import search_dates
 def get_entities_file(filepath):
     # Get CSV file as a Data Frame (df)
     df = pd.read_csv(filepath, delimiter=',', encoding='utf-8-sig')
-    # print(df)
+
     # Iterate over each column in Data Frame
     ent_dict = {}
     for column in df:
